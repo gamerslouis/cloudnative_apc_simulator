@@ -1,0 +1,14 @@
+global:
+  # 定義 Prometheus scrape targer 的頻率，目前設定是每 5 秒問一次 
+  # 注意這是為了 demo 才設這麼頻繁。實務上一般來說會設 30s 或 1m
+  scrape_interval: 15s
+
+scrape_configs:
+  # 定義一個 scrape job, 名為 prometheus, 定期去 scrape Prometheus 本身自帶的 exporter
+  - job_name: 'prometheus'
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'
+    static_configs:
+      # 指定 compose file 的 service 名稱 (my-prometheus), 以及 container port 9090
+      # 預設會定期 scrape 這個 url - http://my-prometheus:9090/metrics
+      - targets: [my-prometheus:9090]
