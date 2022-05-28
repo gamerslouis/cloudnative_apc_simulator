@@ -9,7 +9,10 @@
 #   - Dockerize
 #   I use https://github.com/docker/build-push-action
 #   to build and push this app to docker hub which owns by WaterSo.
-
+#   
+#   - CommitHelm
+#   I use https://github.com/cpina/github-action-push-to-another-repository
+#   to trigger copy job to another repository for helm chart
 name: TSMCxNYCU CI
 
 on:
