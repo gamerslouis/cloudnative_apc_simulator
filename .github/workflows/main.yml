@@ -9,7 +9,10 @@
 #   - Dockerize
 #   I use https://github.com/docker/build-push-action
 #   to build and push this app to docker hub which owns by WaterSo.
-
+#   
+#   - CommitHelm
+#   I use https://github.com/cpina/github-action-push-to-another-repository
+#   to trigger copy job to another repository for helm chart
 name: TSMCxNYCU CI
 
 on:
@@ -42,8 +45,8 @@ jobs:
     name: Publish Docker
     runs-on: ubuntu-latest
     needs: [UnitTest]
-    #  Only trigger deployment as running on the master branch
-    if: github.ref == 'refs/heads/master'
+    #  Only trigger deployment as running on the main branch
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -65,14 +68,20 @@ jobs:
     name: Commit to HELM repo
     runs-on: ubuntu-latest
     needs: [UnitTest]
-    if: github.ref == 'refs/heads/master'
+    #  Only trigger deployment as running on the main branch
+    if: github.ref == 'refs/heads/main'
     steps:
+      # You need to checkout to get the whole directory
+      # cpina does not support copying files 
+      - uses: actions/checkout@v3
       - uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: "output"
-          destination-github-username: "cpina"
-          destination-repository-name: "pandoc-test-output"
-          user-email: carles3@pina.cat
-          target-branch: main
+          source-directory: "src/"
+          target-directory: "src/"
+          target-branch: "main"
+          destination-github-username: "gamerslouis"
+          destination-repository-name: "cloudnative_helm_charts"
+          user-email: alan890104@gmail.com
+
