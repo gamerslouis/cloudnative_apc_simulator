@@ -42,8 +42,8 @@ jobs:
     name: Publish Docker
     runs-on: ubuntu-latest
     needs: [UnitTest]
-    #  Only trigger deployment as running on the master branch
-    if: github.ref == 'refs/heads/master'
+    #  Only trigger deployment as running on the main branch
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -65,8 +65,8 @@ jobs:
     name: Commit to HELM repo
     runs-on: ubuntu-latest
     needs: [UnitTest]
-    #  Only trigger deployment as running on the master branch
-    if: github.ref == 'refs/heads/master'
+    #  Only trigger deployment as running on the main branch
+    if: github.ref == 'refs/heads/main'
     steps:
       # You need to checkout to get the whole directory
       # cpina does not support copying files 
