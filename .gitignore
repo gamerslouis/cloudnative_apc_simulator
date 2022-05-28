@@ -114,3 +114,6 @@ bin/
 
 # Testing Report 
 result.json
+
+# Secret File
+.secret
