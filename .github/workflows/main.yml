@@ -1,0 +1,38 @@
+# ID: 0716235
+# Author: Yu Lun Hsu
+# Description:
+#   I use https://github.com/nektos/act to test this action file locally.
+#   Notice that testing stage needs to use node version >= 12,
+#   since the globalThis does not support in lower version.
+name: TSMCxNYCU CI
+
+on:
+  push:
+    branches:
+      - "main"
+      - "dev"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+jobs:
+  UnitTest:
+    name: UnitTest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # jest testing only allows node version >= 12
+        # or it will cause an `ReferenceError: globalThis is not defined`
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm test --coverage
+
+      
+
+      

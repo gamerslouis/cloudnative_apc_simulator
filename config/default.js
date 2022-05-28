@@ -1,4 +1,8 @@
 module.exports = {
+  cron: {
+    measurePeriod: 10000,
+    paramsPeriod: 15000,
+  },
   nats: {
     connection: '127.0.0.1:4222',
     name: 'testbed',
