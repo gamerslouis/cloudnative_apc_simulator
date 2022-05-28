@@ -1,4 +1,4 @@
-const { domainService } = require('config');
+const { cron, domainService } = require('config');
 
 const axios = require('axios');
 const uuidv4 = require('uuid').v4;
@@ -18,7 +18,7 @@ const run = async () => {
     };
 
     const { data } = await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
-  }, 10000);
+  }, cron.measurePeriod);
 
   return handler;
 };

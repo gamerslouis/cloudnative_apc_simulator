@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-server
+  template:
+    metadata:
+      labels:
+        app: nats-server
+    spec:
+      containers:
+        - name: nats-server
+          image: nats:latest
+          ports:
+            - containerPort: 4222
+          args: ['-js']
+          env:
+            - name: PORT
+              value: '4222'
