@@ -1,55 +1,38 @@
-const { nats } = require('config');
+const { nats } = require("config");
 
-const express = require('express');
+const express = require("express");
 
-const logger = require('../../../utilities/logger')('PARAMS_SERVICE');
+const logger = require("../../../utilities/logger")("PARAMS_SERVICE");
 
 const router = express.Router();
 
-router.post('/api/v1/factor/thickness', async (req, res) => {
+router.post("/api/v1/factor/:type", async (req, res) => {
   const { factor } = req.body;
+  const { type } = req.params;
+  const TYPE_STR = `FACTOR_${type.toUpperCase()}`;
 
   const handle = logger.begin({ factor });
 
-  try {
-    if (!global.natsClient) {
-      throw new Error('the natsClient is not existed');
-    }
-    await global.natsClient.publish(`${nats.subject}.params`, {
-      type: 'FACTOR_THICKNESS',
-      factor,
-    });
-
-    logger.end(handle, {}, `publish the thickness factor: ${factor}`);
-
-    return res.status(200).send({
-      ok: true,
-    });
-  } catch (err) {
-    logger.fail(handle, {}, err.message);
-
-    return res.status(500).send({
+  if (!["thickness", "moisture"].includes(type)) {
+    return res.status(400).send({
       ok: false,
-      message: err.message,
+      message: `${type} is not a valid type`,
     });
   }
-});
-
-router.post('/api/v1/factor/moisture', async (req, res) => {
-  const { factor } = req.body;
-
-  const handle = logger.begin({ factor });
 
   try {
     if (!global.natsClient) {
-      throw new Error('the natsClient is not existed');
+      return res.status(503).send({
+        ok: false,
+        message: "the natsClient is not existed",
+      });
     }
     await global.natsClient.publish(`${nats.subject}.params`, {
-      type: 'FACTOR_MOISTURE',
+      type: TYPE_STR,
       factor,
     });
 
-    logger.end(handle), {}, `publish the moisture factor: ${factor}`;
+    logger.end(handle, {}, `publish the ${type} factor: ${factor}`);
 
     return res.status(200).send({
       ok: true,
