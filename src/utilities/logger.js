@@ -57,7 +57,7 @@ const func = (loggerLabel) => {
 
     const duration = moment().diff(cacheData.ts);
 
-    logger.error(message, { _duration: duration, ...cacheData.metadata, ...metaData });
+    logger.error(message, { _duration: duration, ...cacheData.metadata, ...metadata });
   };
 
   return logger;
