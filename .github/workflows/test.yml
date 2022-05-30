@@ -49,7 +49,7 @@ jobs:
         uses: notiz-dev/github-action-json-property@release
         with: 
             path: 'coverage/coverage-summary.json'
-            prop_path: 'total/statements/pct'
+            prop_path: 'total.statements.pct'
       - name: Create coverage Badge
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/ci/badge' }} 
         uses: schneegans/dynamic-badges-action@master
