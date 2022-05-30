@@ -42,6 +42,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm test
+      - run: cat coverage/coverage-summary.json
       - name: get coverage
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/ci/badge' }} 
         id: coverage
@@ -49,7 +50,6 @@ jobs:
         with: 
             path: 'coverage/coverage-summary.json'
             prop_path: 'total/statements/pct'
-      - run: cat coverage/coverage-summary.json
       - name: Create coverage Badge
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/ci/badge' }} 
         uses: schneegans/dynamic-badges-action@master
