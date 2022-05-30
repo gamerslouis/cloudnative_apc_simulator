@@ -4,7 +4,7 @@
   "description": "the project to simulate the APC scenario",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,15 @@
   },
   "devDependencies": {
     "jest": "^28.1.0"
+  },
+  "jest": {
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      "text",
+      "text-summary",
+      "json-summary"
+    ]
   }
 }
