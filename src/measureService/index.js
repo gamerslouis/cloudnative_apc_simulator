@@ -13,11 +13,11 @@ const run = async () => {
     const payload = {
       id,
       type: types[index],
-      thickness: 2 + Math.random().toFixed(2),
+      thickness: 2 + Math.random().toFixed(2), // "2" + "0.123" = "20.123"
       moisture: 6 + Math.random().toFixed(2),
     };
 
-    const { data } = await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
+    await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
   }, cron.measurePeriod);
 
   return handler;
