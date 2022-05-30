@@ -1,4 +1,9 @@
 # User Guide
+![example workflow](https://github.com/gamerslouis/cloudnative_apc_simulator/actions/workflows/test.yml/badge.svg)
+![example workflow](https://github.com/gamerslouis/cloudnative_apc_simulator/actions/workflows/deploy_GKE.yml/badge.svg)
+![example workflow](https://github.com/gamerslouis/cloudnative_apc_simulator/actions/workflows/deploy_HUB.yml/badge.svg)
+![example workflow](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/gamerslouis/de5d1904df014ea44b2832ad03f92e84/raw/dev.coverage.json
+)
 
 - ## Environment Settings
   - run ``npm install`` in terminal to install all dependent packages

@@ -20,6 +20,7 @@ on:
     branches:
       - "main"
       - "dev"
+      - "ci/badge"
   pull_request:
     branches:
       - "main"
@@ -41,6 +42,26 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm test
+      - name: get coverage
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/ci/badge' }} 
+        id: coverage
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'coverage/coverage-summary.json'
+            prop_path: 'total/statements/pct'
+      - name: Create coverage Badge
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/ci/badge' }} 
+        uses: schneegans/dynamic-badges-action@master
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: de5d1904df014ea44b2832ad03f92e84
+          filename: dev.coverage.json
+          label: Coverage (dev)
+          message: ${{ steps.coverage.outputs.prop }}
+          valColorRange: ${{ steps.coverage.outputs.prop }}
+          maxColorRange: 100
+          minColorRange: 0
+
   Dockerize:
     name: Publish Docker
     runs-on: ubuntu-latest
