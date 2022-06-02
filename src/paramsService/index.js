@@ -1,7 +1,6 @@
-const { cron, domainService } = require('config');
-const axios = require('axios');
-
-const app = require('./app');
+import { cron, domainService } from 'config';
+import axios from 'axios';
+import app from './app';
 
 const run = async () => {
   return new Promise((resolve, reject) => {
@@ -25,6 +24,6 @@ const run = async () => {
   });
 };
 
-module.exports = {
+export default {
   run,
 };

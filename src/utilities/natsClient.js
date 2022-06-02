@@ -1,6 +1,6 @@
-const { connect, StringCodec, consumerOpts, credsAuthenticator, AckPolicy } = require('nats');
-
-const logger = require('./logger')('NATSClient');
+import { connect, StringCodec, consumerOpts, credsAuthenticator, AckPolicy } from 'nats';
+import loggerFactory from './logger';
+const logger = loggerFactory('NATSClient');
 
 class NATSClient {
   constructor() {
@@ -247,4 +247,4 @@ NATSClient.instance = () => {
   return NATSClient._instance;
 };
 
-module.exports = NATSClient;
+export default NATSClient;

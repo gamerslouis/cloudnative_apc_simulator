@@ -16,7 +16,7 @@ const sharonStrategy = (thickness, tFactor) => {
   };
 };
 
-module.exports = {
+export default {
   defaultStrategy,
   sharonStrategy,
 };

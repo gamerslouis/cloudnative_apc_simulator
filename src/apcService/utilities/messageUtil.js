@@ -1,4 +1,5 @@
-const logger = require('../../utilities/logger')('APC_SERVICE');
+import loggerFactory from '../../utilities/logger';
+const logger = loggerFactory('APC_SERVICE');
 
 const natsMessageHandler = (message) => {
   if (!global.cache) {
@@ -17,6 +18,6 @@ const natsMessageHandler = (message) => {
   }
 };
 
-module.exports = {
+export default {
   natsMessageHandler,
 };

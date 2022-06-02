@@ -1,16 +1,14 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
-const { nats } = require('config');
-
-const NodeCache = require('node-cache');
-
-const logger = require('./utilities/logger')('INDEX');
-const NATSClient = require('./utilities/natsClient');
-
-const measureService = require('./measureService');
-const apcService = require('./apcService');
-const paramsService = require('./paramsService');
+import { nats } from 'config';
+import NodeCache from 'node-cache';
+import loggerFactory from './utilities/logger';
+const logger = loggerFactory('INDEX');
+import NATSClient from './utilities/natsClient';
+import measureService from './measureService';
+import apcService from './apcService';
+import paramsService from './paramsService';
 
 let measureHandle = null;
 let paramsHandle = null;

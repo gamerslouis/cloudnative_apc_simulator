@@ -1,6 +1,6 @@
-const createLogger = require("../logger");
+import createLogger from '../logger';
 const Conosle = require("winston").transports.Console;
-const { MESSAGE } = require("triple-beam");
+import { MESSAGE } from 'triple-beam';
 
 
 const mockLog = jest.fn();

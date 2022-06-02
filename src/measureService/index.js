@@ -1,7 +1,6 @@
-const { cron, domainService } = require('config');
-
-const axios = require('axios');
-const uuidv4 = require('uuid').v4;
+import { cron, domainService } from 'config';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 const types = ['SHARON', 'RIB_EYE'];
 
@@ -23,6 +22,6 @@ const run = async () => {
   return handler;
 };
 
-module.exports = {
+export default {
   run,
 };

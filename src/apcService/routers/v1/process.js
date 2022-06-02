@@ -1,8 +1,7 @@
-const express = require('express');
-
-const { defaultStrategy, sharonStrategy } = require('../../utilities/strategyUtil');
-
-const logger = require('../../../utilities/logger')('APC_SERVICE');
+import express from 'express';
+import { defaultStrategy, sharonStrategy } from '../../utilities/strategyUtil';
+import loggerFactory from '../../../utilities/logger';
+const logger = loggerFactory('APC_SERVICE');
 
 const router = express.Router();
 
@@ -40,4 +39,4 @@ router.post('/api/v1/process', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

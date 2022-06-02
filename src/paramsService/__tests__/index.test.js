@@ -1,6 +1,6 @@
-const axios = require("axios");
-const { domainService } = require("config");
-const { run } = require("../index");
+import axios from 'axios';
+import { domainService } from 'config';
+import { run } from '../index';
 
 jest.mock("axios");
 jest.useFakeTimers();

@@ -1,7 +1,7 @@
-const express = require('express');
-const { json, urlencoded } = require('body-parser');
-const cors = require('cors');
-const factorRouter = require('./routers/v1/factor');
+import express from 'express';
+import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
+import factorRouter from './routers/v1/factor';
 
 const app = express();
 
@@ -11,4 +11,4 @@ app.use(cors());
 
 app.use('', factorRouter);
 
-module.exports = app;
+export default app;

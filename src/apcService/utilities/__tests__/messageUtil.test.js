@@ -1,4 +1,4 @@
-const { natsMessageHandler } = require('../messageUtil');
+import { natsMessageHandler } from '../messageUtil';
 
 describe('Module messageUtil', () => {
   const fakeType = 'FACTOR_THICKNESS';

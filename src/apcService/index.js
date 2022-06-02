@@ -1,11 +1,9 @@
-const { domainService, nats } = require('config');
-
-const express = require('express');
-const { json, urlencoded } = require('body-parser');
-const cors = require('cors');
-
-const processRouter = require('./routers/v1/process');
-const { natsMessageHandler } = require('./utilities/messageUtil');
+import { domainService, nats } from 'config';
+import express from 'express';
+import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
+import processRouter from './routers/v1/process';
+import { natsMessageHandler } from './utilities/messageUtil';
 
 const app = express();
 
@@ -28,6 +26,6 @@ const run = async () => {
   });
 };
 
-module.exports = {
+export default {
   run,
 };

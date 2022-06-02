@@ -1,4 +1,4 @@
-const { sharonStrategy, defaultStrategy } = require('../strategyUtil');
+import { sharonStrategy, defaultStrategy } from '../strategyUtil';
 
 describe('Module strategyUtil', () => {
   const fakeThickness = 2.0;

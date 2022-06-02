@@ -1,8 +1,7 @@
-const { nats } = require("config");
-
-const express = require("express");
-
-const logger = require("../../../utilities/logger")("PARAMS_SERVICE");
+import { nats } from 'config';
+import express from 'express';
+import loggerFactory from '../../../utilities/logger';
+const logger = loggerFactory("PARAMS_SERVICE");
 
 const router = express.Router();
 
@@ -47,4 +46,4 @@ router.post("/api/v1/factor/:type", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

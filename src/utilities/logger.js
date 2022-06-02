@@ -1,7 +1,7 @@
-const moment = require('moment');
-const uuidv4 = require('uuid').v4;
-const NodeCache = require('node-cache');
-const { createLogger, format, transports } = require('winston');
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import NodeCache from 'node-cache';
+import { createLogger, format, transports } from 'winston';
 const { timestamp, printf, combine, splat, label } = format;
 
 const customFormat = printf(({ timestamp, label, message, level, ...metadata }) => {
@@ -63,4 +63,4 @@ const func = (loggerLabel) => {
   return logger;
 };
 
-module.exports = func;
+export default func;
