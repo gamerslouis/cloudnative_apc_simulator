@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { nats } from 'config';
-import NodeCache from 'node-cache';
 import Logger from './utilities/logger';
 import NATSClient from './utilities/natsClient';
 import measureService from './measureService';
 import apcService from './apcService';
 import paramsService from './paramsService';
+import { Cache, NodeCacheAdapter } from './apcService/utilities/Cache/cache';
 
 declare global {
-  var cache: NodeCache
+  var cache: Cache
   var natsClient: NATSClient
 };
 
@@ -46,7 +46,7 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
-  global.cache = new NodeCache();
+  global.cache = new NodeCacheAdapter();
   global.cache.set('FACTOR_THICKNESS', 0.5);
   global.cache.set('FACTOR_MOISTURE', 0.5);
 };

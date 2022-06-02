@@ -2,7 +2,7 @@ import { cron, domainService } from 'config';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-const types = ['SHARON', 'RIB_EYE'];
+const types = ['SHARON', 'RIB_EYE','TBONE', 'ANGUS', 'WAGYU', 'FILET', 'STRIP'];
 
 const run = async () => {
   const handler = setInterval(async () => {
