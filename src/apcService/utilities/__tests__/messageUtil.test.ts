@@ -1,4 +1,4 @@
-import NodeCache from 'node-cache';
+import { Cache } from '../cache';
 import { natsMessageHandler } from '../messageUtil';
 
 describe('Module messageUtil', () => {
@@ -12,7 +12,7 @@ describe('Module messageUtil', () => {
   it('Method natsMessageHandler for success', async () => {
     global.cache = {
       set: jest.fn().mockReturnValueOnce(true),
-    } as unknown as NodeCache;
+    } as unknown as Cache;
 
     natsMessageHandler(
       JSON.stringify({

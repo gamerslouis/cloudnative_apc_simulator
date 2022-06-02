@@ -1,4 +1,5 @@
 import NodeCache, { Key } from 'node-cache';
+
 export interface Cache {
   get(key: String): number;
   set(key: String, value: number);
@@ -9,9 +10,11 @@ export class MongoCache implements Cache {
   public get(key: String): number {
     return;
   }
+
   public set(key: String, value: number): Boolean {
     return;
   }
+
   public close() {}
 }
 

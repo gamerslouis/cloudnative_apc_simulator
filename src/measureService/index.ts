@@ -24,10 +24,7 @@ const run = async () => {
       moisture: 6 + Math.random().toFixed(2),
     };
 
-    const { data } = await axios.post(
-      `${domainService.apc.endpoint}/api/v1/process`,
-      payload,
-    );
+    await axios.post(`${domainService.apc.endpoint}/api/v1/process`, payload);
   }, cron.measurePeriod);
 
   return handler;
