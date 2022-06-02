@@ -16,7 +16,12 @@ app.use('', processRouter);
 const run = async () => {
   // subscribe the subject
   if (global.natsClient) {
-    global.natsClient.subscribe(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`, natsMessageHandler);
+    global.natsClient.subscribe(
+      nats.stream,
+      `${nats.subject}.params`,
+      `${nats.consumer}_params`,
+      natsMessageHandler,
+    );
   }
 
   return new Promise((resolve, reject) => {

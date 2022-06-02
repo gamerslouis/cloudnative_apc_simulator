@@ -1,18 +1,18 @@
 import { nats } from 'config';
 import express from 'express';
 import Logger from '../../../utilities/logger';
-const logger = new Logger("PARAMS_SERVICE");
+const logger = new Logger('PARAMS_SERVICE');
 
 const router = express.Router();
 
-router.post("/api/v1/factor/:type", async (req: any, res: any) => {
+router.post('/api/v1/factor/:type', async (req: any, res: any) => {
   const { factor } = req.body;
   const { type } = req.params;
   const TYPE_STR = `FACTOR_${type.toUpperCase()}`;
 
   const handle = logger.begin({ factor });
 
-  if (!["thickness", "moisture"].includes(type)) {
+  if (!['thickness', 'moisture'].includes(type)) {
     return res.status(400).send({
       ok: false,
       message: `${type} is not a valid type`,
@@ -23,7 +23,7 @@ router.post("/api/v1/factor/:type", async (req: any, res: any) => {
     if (!global.natsClient) {
       return res.status(503).send({
         ok: false,
-        message: "the natsClient is not existed",
+        message: 'the natsClient is not existed',
       });
     }
 

@@ -10,9 +10,9 @@ import paramsService from './paramsService';
 import { Cache, NodeCacheAdapter } from './apcService/utilities/Cache/cache';
 
 declare global {
-  var cache: Cache
-  var natsClient: NATSClient
-};
+  var cache: Cache;
+  var natsClient: NATSClient;
+}
 
 const logger = new Logger('INDEX');
 let measureHandle: any = null;
@@ -31,9 +31,15 @@ const initGlobalNATSClient = async () => {
   // clear stream and consumer by existence
   let stream = await global.natsClient.getStream(nats.stream);
   if (stream) {
-    let consumer = await global.natsClient.getConsumer(nats.stream, `${nats.consumer}_params`);
+    let consumer = await global.natsClient.getConsumer(
+      nats.stream,
+      `${nats.consumer}_params`,
+    );
     if (consumer) {
-      await global.natsClient.deleteConsumer(nats.stream, `${nats.consumer}_params`);
+      await global.natsClient.deleteConsumer(
+        nats.stream,
+        `${nats.consumer}_params`,
+      );
     }
     await global.natsClient.deleteStream(nats.stream);
   }
@@ -42,7 +48,11 @@ const initGlobalNATSClient = async () => {
   await global.natsClient.addStream(nats.stream, [`${nats.subject}.>`]);
 
   // add the consumer
-  await global.natsClient.addConsumer(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`);
+  await global.natsClient.addConsumer(
+    nats.stream,
+    `${nats.subject}.params`,
+    `${nats.consumer}_params`,
+  );
 };
 
 const initGlobalCache = async () => {

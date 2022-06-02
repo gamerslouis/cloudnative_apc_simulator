@@ -1,15 +1,15 @@
-import moment from "moment";
-import { v4 as uuidv4 } from "uuid";
-import NodeCache from "node-cache";
-import winston, { createLogger, format, transports } from "winston";
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import NodeCache from 'node-cache';
+import winston, { createLogger, format, transports } from 'winston';
 const { timestamp, printf, combine, splat, label } = format;
 
 const customFormat = printf(
   ({ timestamp, label, message, level, ...metadata }) => {
     return `[${label}] | ${timestamp} | ${level} | ${message} | ${JSON.stringify(
-      metadata
+      metadata,
     )}`;
-  }
+  },
 );
 
 export default class Logger {
@@ -18,7 +18,7 @@ export default class Logger {
 
   constructor(loggerLabel: any) {
     this.logger = createLogger({
-      level: "debug",
+      level: 'debug',
       format: combine(
         timestamp(),
         label({
@@ -26,9 +26,9 @@ export default class Logger {
           message: false,
         }),
         splat(),
-        customFormat
+        customFormat,
       ),
-      transports: [new transports.Console({ level: "debug" })],
+      transports: [new transports.Console({ level: 'debug' })],
     });
     this.cache = new NodeCache();
   }
@@ -47,7 +47,7 @@ export default class Logger {
     return handle;
   }
 
-  end(handle: any, metadata = {}, message = "complete the process") {
+  end(handle: any, metadata = {}, message = 'complete the process') {
     const cacheData = this.getDelHandleData(handle);
     if (!cacheData) return;
     const duration = moment().diff(cacheData.ts);
@@ -58,7 +58,7 @@ export default class Logger {
     });
   }
 
-  fail(handle: any, metadata = {}, message = "the process is faulted") {
+  fail(handle: any, metadata = {}, message = 'the process is faulted') {
     const cacheData = this.getDelHandleData(handle);
     if (!cacheData) return;
     const duration = moment().diff(cacheData.ts);

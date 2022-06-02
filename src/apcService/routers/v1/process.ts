@@ -1,7 +1,7 @@
 import express from 'express';
 import Logger from '../../../utilities/logger';
 const logger = new Logger('APC_SERVICE');
-import {getStrategy} from './getStrategy'
+import { getStrategy } from './getStrategy';
 const router = express.Router();
 
 export class OrderContext {
@@ -10,12 +10,11 @@ export class OrderContext {
   public moisture: number;
   public thickness: number;
 
-  constructor(moisture: number, thickness: number)
-  {
-      this.tFactor=global.cache.get('FACTOR_THICKNESS');
-      this.mFactor=global.cache.get('FACTOR_MOISTURE');
-      this.moisture=moisture;
-      this.thickness=thickness
+  constructor(moisture: number, thickness: number) {
+    this.tFactor = global.cache.get('FACTOR_THICKNESS');
+    this.mFactor = global.cache.get('FACTOR_MOISTURE');
+    this.moisture = moisture;
+    this.thickness = thickness;
   }
 }
 
@@ -34,14 +33,17 @@ router.post('/api/v1/process', async (req: any, res: any) => {
       throw new Error('the global cache is not existed');
     }
 
+    const order: OrderContext = new OrderContext(moisture, thickness);
+    const strategy = getStrategy(type);
+    let data = strategy.apply(order);
+    let t = order.tFactor;
+    let m = order.mFactor;
 
-    const order: OrderContext = new OrderContext(moisture,thickness)
-    const strategy = getStrategy(type)
-    let data = strategy.apply(order)
-    let t=order.tFactor
-    let m=order.mFactor
-
-    logger.end(handle, { t, m, ...data }, `process (${id}) of APC has completed`);
+    logger.end(
+      handle,
+      { t, m, ...data },
+      `process (${id}) of APC has completed`,
+    );
 
     return res.status(200).send({ ok: true, data: { ...data, t, m } });
   } catch (err) {

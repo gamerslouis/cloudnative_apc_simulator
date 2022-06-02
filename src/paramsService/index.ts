@@ -1,6 +1,6 @@
-import { cron, domainService } from "config";
-import axios from "axios";
-import app from "./app";
+import { cron, domainService } from 'config';
+import axios from 'axios';
+import app from './app';
 
 const run = async () => {
   return new Promise((resolve, reject) => {
@@ -12,11 +12,11 @@ const run = async () => {
 
           axios.post(
             `${domainService.params.endpoint}/api/v1/factor/thickness`,
-            { factor: tFactor }
+            { factor: tFactor },
           );
           axios.post(
             `${domainService.params.endpoint}/api/v1/factor/moisture`,
-            { factor: mFactor }
+            { factor: mFactor },
           );
         }, cron.paramsPeriod);
 

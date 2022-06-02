@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
     "test": "jest --coverage",
-    "build": "tsc --project tsconfig.build.json"
+    "build": "tsc --project tsconfig.build.json",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "cross-env": "^7.0.3",
     "jest": "^28.1.0",
     "nodemon": "^2.0.16",
+    "prettier": "^2.6.2",
     "supertest": "^6.2.3",
     "ts-jest": "^28.0.3",
     "ts-migrate": "^0.1.28",

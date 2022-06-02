@@ -18,7 +18,7 @@ describe('Module messageUtil', () => {
       JSON.stringify({
         type: fakeType,
         factor: fakeFactor,
-      })
+      }),
     );
 
     expect(global.cache.set).toHaveBeenCalledWith(fakeType, fakeFactor);
@@ -33,7 +33,7 @@ describe('Module messageUtil', () => {
       JSON.stringify({
         type: 'FAKE_TYPE',
         factor: fakeFactor,
-      })
+      }),
     );
 
     expect(global.cache.set).toBeCalledTimes(0);
