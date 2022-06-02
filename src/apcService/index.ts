@@ -21,7 +21,7 @@ const run = async () => {
 
   return new Promise((resolve, reject) => {
     app.listen(domainService.apc.port, () => {
-      resolve();
+      resolve(undefined);
     });
   });
 };

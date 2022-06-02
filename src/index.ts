@@ -3,15 +3,20 @@ dotenv.config();
 
 import { nats } from 'config';
 import NodeCache from 'node-cache';
-import loggerFactory from './utilities/logger';
-const logger = loggerFactory('INDEX');
+import Logger from './utilities/logger';
 import NATSClient from './utilities/natsClient';
 import measureService from './measureService';
 import apcService from './apcService';
 import paramsService from './paramsService';
 
-let measureHandle = null;
-let paramsHandle = null;
+declare global {
+  var cache: NodeCache
+  var natsClient: NATSClient
+};
+
+const logger = new Logger('INDEX');
+let measureHandle: any = null;
+let paramsHandle: any = null;
 
 const initGlobalNATSClient = async () => {
   // instantiate the nats client
@@ -42,7 +47,6 @@ const initGlobalNATSClient = async () => {
 
 const initGlobalCache = async () => {
   global.cache = new NodeCache();
-
   global.cache.set('FACTOR_THICKNESS', 0.5);
   global.cache.set('FACTOR_MOISTURE', 0.5);
 };

@@ -1,11 +1,11 @@
 import express from 'express';
 import { defaultStrategy, sharonStrategy } from '../../utilities/strategyUtil';
-import loggerFactory from '../../../utilities/logger';
-const logger = loggerFactory('APC_SERVICE');
+import Logger from '../../../utilities/logger';
+const logger = new Logger('APC_SERVICE');
 
 const router = express.Router();
 
-router.post('/api/v1/process', async (req, res) => {
+router.post('/api/v1/process', async (req: any, res: any) => {
   const { id, type, thickness, moisture } = req.body;
 
   const handle = logger.begin({
@@ -33,7 +33,7 @@ router.post('/api/v1/process', async (req, res) => {
 
     return res.status(200).send({ ok: true, data: { ...data, tFactor, mFactor } });
   } catch (err) {
-    logger.fail(handle, { tFactor, mFactor }, err.message);
+    logger.fail(handle, {}, err.message);
 
     return res.status(500).send({ ok: false, message: err.message });
   }

@@ -1,66 +1,78 @@
-import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
-import NodeCache from 'node-cache';
-import { createLogger, format, transports } from 'winston';
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
+import NodeCache from "node-cache";
+import winston, { createLogger, format, transports } from "winston";
 const { timestamp, printf, combine, splat, label } = format;
 
-const customFormat = printf(({ timestamp, label, message, level, ...metadata }) => {
-  return `[${label}] | ${timestamp} | ${level} | ${message} | ${JSON.stringify(metadata)}`;
-});
+const customFormat = printf(
+  ({ timestamp, label, message, level, ...metadata }) => {
+    return `[${label}] | ${timestamp} | ${level} | ${message} | ${JSON.stringify(
+      metadata
+    )}`;
+  }
+);
 
-const func = (loggerLabel) => {
-  const logger = createLogger({
-    level: 'debug',
-    format: combine(
-      timestamp(),
-      label({
-        label: loggerLabel,
-        message: false,
-      }),
-      splat(),
-      customFormat
-    ),
-    transports: [new transports.Console({ level: 'debug' })],
-  });
+export default class Logger {
+  logger: winston.Logger;
+  cache: NodeCache;
 
-  logger.cache = new NodeCache();
-
-  const getDelHandleData = (handle) => {
-    const cacheData = logger.cache.get(handle);
+  constructor(loggerLabel: any) {
+    this.logger = createLogger({
+      level: "debug",
+      format: combine(
+        timestamp(),
+        label({
+          label: loggerLabel,
+          message: false,
+        }),
+        splat(),
+        customFormat
+      ),
+      transports: [new transports.Console({ level: "debug" })],
+    });
+    this.cache = new NodeCache();
+  }
+  getDelHandleData(handle: any): any {
+    const cacheData = this.cache.get(handle);
     if (cacheData === undefined) {
       return null;
     }
-    logger.cache.del(handle);
-
+    this.cache.del(handle);
     return cacheData;
-  };
+  }
 
-  logger.begin = (metadata) => {
+  begin(metadata: any) {
     const handle = uuidv4();
-    logger.cache.set(handle, { ts: moment(), metadata });
-
+    this.cache.set(handle, { ts: moment(), metadata });
     return handle;
-  };
+  }
 
-  logger.end = (handle, metadata = {}, message = 'complete the process') => {
-    const cacheData = getDelHandleData(handle);
+  end(handle: any, metadata = {}, message = "complete the process") {
+    const cacheData = this.getDelHandleData(handle);
     if (!cacheData) return;
-
     const duration = moment().diff(cacheData.ts);
+    this.logger.info(message, {
+      _duration: duration,
+      ...cacheData.metadata,
+      ...metadata,
+    });
+  }
 
-    logger.info(message, { _duration: duration, ...cacheData.metadata, ...metadata });
-  };
-
-  logger.fail = (handle, metadata = {}, message = 'the process is faulted') => {
-    const cacheData = getDelHandleData(handle);
+  fail(handle: any, metadata = {}, message = "the process is faulted") {
+    const cacheData = this.getDelHandleData(handle);
     if (!cacheData) return;
-
     const duration = moment().diff(cacheData.ts);
+    this.logger.error(message, {
+      _duration: duration,
+      ...cacheData.metadata,
+      ...metadata,
+    });
+  }
 
-    logger.error(message, { _duration: duration, ...cacheData.metadata, ...metadata });
-  };
-
-  return logger;
-};
-
-export default func;
+  info(arg0: string, arg1?: { module: string; method: string }) {
+    this.logger.info(arg0, arg1);
+  }
+  error(message: any, arg1: { module: string; method: string }) {
+    this.logger.error(message, arg1);
+  }
+}

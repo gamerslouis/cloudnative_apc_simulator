@@ -1,11 +1,11 @@
 import { nats } from 'config';
 import express from 'express';
-import loggerFactory from '../../../utilities/logger';
-const logger = loggerFactory("PARAMS_SERVICE");
+import Logger from '../../../utilities/logger';
+const logger = new Logger("PARAMS_SERVICE");
 
 const router = express.Router();
 
-router.post("/api/v1/factor/:type", async (req, res) => {
+router.post("/api/v1/factor/:type", async (req: any, res: any) => {
   const { factor } = req.body;
   const { type } = req.params;
   const TYPE_STR = `FACTOR_${type.toUpperCase()}`;
@@ -26,6 +26,7 @@ router.post("/api/v1/factor/:type", async (req, res) => {
         message: "the natsClient is not existed",
       });
     }
+
     await global.natsClient.publish(`${nats.subject}.params`, {
       type: TYPE_STR,
       factor,

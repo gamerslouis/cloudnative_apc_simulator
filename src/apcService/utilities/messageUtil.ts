@@ -1,7 +1,7 @@
-import loggerFactory from '../../utilities/logger';
-const logger = loggerFactory('APC_SERVICE');
+import Logger from '../../utilities/logger';
+const logger = new Logger('APC_SERVICE');
 
-const natsMessageHandler = (message) => {
+export const natsMessageHandler = (message: any) => {
   if (!global.cache) {
     return;
   }
@@ -16,8 +16,4 @@ const natsMessageHandler = (message) => {
 
     logger.info(`receive moisture factor: ${msgObj.factor}`);
   }
-};
-
-export default {
-  natsMessageHandler,
 };
