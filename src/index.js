@@ -48,42 +48,57 @@ const initGlobalNATSClient = async () => {
 
 const initGlobalCache = async () => {
 
+
+  // global.mongoCache = new NodeCache();
+  // global.mongoCache.set('FACTOR_THICKNESS', 0.5);
+  // global.mongoCache.set('FACTOR_MOISTURE', 0.5);
+
+
   global.mongoCache = cacheManager.caching({
     store : mongoStore,
     uri : mongodb.uri,
     options : {
       collection : mongodb.collection,
       compression : false,
-      poolSize : 5,
+      poolSize : 10,
       autoReconnect: true
     }
   });
 
   let tFactorPromise = global.mongoCache.get('FACTOR_THICKNESS');
-  let mFactorPromise = global.mongoCache.get('FACTOR_MOISTURE');
+  
   tFactorPromise.then(function(tFactor) {
     console.log('tFactor: ', tFactor);
-    if (typeof tFactor  === "number"){
+    if (typeof tFactor  != "undefined"){
       console.log('retrieve FACTOR_THICKNESS: ', tFactor);
       global.mongoCache.set('FACTOR_THICKNESS', tFactor, ttl);
+      let mFactorPromise = global.mongoCache.get('FACTOR_MOISTURE');
+      mFactorPromise.then(function(mFactor) {
+        console.log('mFactor: ', mFactor);
+        if (typeof mFactor  != "undefined"){
+          console.log('retrieve FACTOR_MOISTURE: ', mFactor);
+          global.mongoCache.set('FACTOR_MOISTURE', mFactor, ttl);
+        }else{
+          console.log('store initial FACTOR_MOISTURE: 0.5');
+          global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
+        }
+      });
     }else{
       console.log('store initial FACTOR_THICKNESS: 0.5');
       global.mongoCache.set('FACTOR_THICKNESS', 0.5, ttl);
+      let mFactorPromise = global.mongoCache.get('FACTOR_MOISTURE');
+      mFactorPromise.then(function(mFactor) {
+        console.log('mFactor: ', mFactor);
+        if (typeof mFactor  != "undefined"){
+          console.log('retrieve FACTOR_MOISTURE: ', mFactor);
+          global.mongoCache.set('FACTOR_MOISTURE', mFactor, ttl);
+        }else{
+          console.log('store initial FACTOR_MOISTURE: 0.5');
+          global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
+        }
+      });
     }
-    
   });
-
-  mFactorPromise.then(function(mFactor) {
-    console.log('mFactor: ', mFactor);
-    if (typeof tFactor  === "number"){
-      console.log('retrieve FACTOR_MOISTURE: ', mFactor);
-      global.mongoCache.set('FACTOR_MOISTURE', mFactor, ttl);
-    }else{
-      console.log('store initial FACTOR_MOISTURE: 0.5');
-      global.mongoCache.set('FACTOR_MOISTURE', 0.5, ttl);
-    }
-  });
-
 };
 
 const run = async () => {
