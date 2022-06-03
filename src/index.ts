@@ -1,19 +1,22 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
-const { nats } = require('config');
+import { nats, mongodb } from 'config';
+import Logger from './utilities/logger';
+import NATSClient from './utilities/natsClient';
+import measureService from './measureService';
+import * as apcService from './apcService';
+import * as paramsService from './paramsService';
+import { Cache, MongoDBCacheAdapter } from './apcService/utilities/cacheUtil';
 
-const NodeCache = require('node-cache');
+declare global {
+  var cache: Cache;
+  var natsClient: NATSClient;
+}
 
-const logger = require('./utilities/logger')('INDEX');
-const NATSClient = require('./utilities/natsClient');
-
-const measureService = require('./measureService');
-const apcService = require('./apcService');
-const paramsService = require('./paramsService');
-
-let measureHandle = null;
-let paramsHandle = null;
+const logger = new Logger('INDEX');
+let measureHandle: any = null;
+let paramsHandle: any = null;
 
 const initGlobalNATSClient = async () => {
   // instantiate the nats client
@@ -28,9 +31,15 @@ const initGlobalNATSClient = async () => {
   // clear stream and consumer by existence
   let stream = await global.natsClient.getStream(nats.stream);
   if (stream) {
-    let consumer = await global.natsClient.getConsumer(nats.stream, `${nats.consumer}_params`);
+    let consumer = await global.natsClient.getConsumer(
+      nats.stream,
+      `${nats.consumer}_params`,
+    );
     if (consumer) {
-      await global.natsClient.deleteConsumer(nats.stream, `${nats.consumer}_params`);
+      await global.natsClient.deleteConsumer(
+        nats.stream,
+        `${nats.consumer}_params`,
+      );
     }
     await global.natsClient.deleteStream(nats.stream);
   }
@@ -39,14 +48,17 @@ const initGlobalNATSClient = async () => {
   await global.natsClient.addStream(nats.stream, [`${nats.subject}.>`]);
 
   // add the consumer
-  await global.natsClient.addConsumer(nats.stream, `${nats.subject}.params`, `${nats.consumer}_params`);
+  await global.natsClient.addConsumer(
+    nats.stream,
+    `${nats.subject}.params`,
+    `${nats.consumer}_params`,
+  );
 };
 
 const initGlobalCache = async () => {
-  global.cache = new NodeCache();
-
-  global.cache.set('FACTOR_THICKNESS', 0.5);
-  global.cache.set('FACTOR_MOISTURE', 0.5);
+  global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection);
+  await global.cache.set('FACTOR_THICKNESS', 0.5);
+  await global.cache.set('FACTOR_MOISTURE', 0.5);
 };
 
 const run = async () => {

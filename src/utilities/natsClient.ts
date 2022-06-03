@@ -1,8 +1,29 @@
-const { connect, StringCodec, consumerOpts, credsAuthenticator, AckPolicy } = require('nats');
-
-const logger = require('./logger')('NATSClient');
+import {
+  connect,
+  StringCodec,
+  consumerOpts,
+  credsAuthenticator,
+  AckPolicy,
+} from 'nats';
+import Logger from './logger';
+const logger = new Logger('NATSClient');
 
 class NATSClient {
+  static _instance: NATSClient = null;
+
+  static instance() {
+    if (!NATSClient._instance) {
+      NATSClient._instance = new NATSClient();
+    }
+    return NATSClient._instance;
+  }
+
+  handler: any;
+  js: any;
+  jsm: any;
+  nc: any;
+  sc: any;
+  subs: any;
   constructor() {
     this.nc = null;
     this.jsm = null;
@@ -12,12 +33,18 @@ class NATSClient {
     this.handler = null;
   }
 
-  async connect(name, servers, creds = null, apiPrefix = null) {
+  async connect(name: any, servers: any, creds = null, apiPrefix = null) {
     try {
       this.nc = await connect({
         name,
         servers,
-        ...(creds ? { authenticator: credsAuthenticator(new TextEncoder().encode(creds)) } : {}),
+        ...(creds
+          ? {
+              authenticator: credsAuthenticator(
+                new TextEncoder().encode(creds),
+              ),
+            }
+          : {}),
       });
 
       this.jsm = await this.nc.jetstreamManager({
@@ -30,11 +57,14 @@ class NATSClient {
 
       this.handler = setInterval(() => {
         for (let sub of Object.values(this.subs)) {
-          sub.pull({ batch: 10, expires: 10000 });
+          (sub as any).pull({ batch: 10, expires: 10000 });
         }
       }, 10000);
 
-      logger.info('Successfully connect to NATS', { module: 'natsClient', method: 'connect' });
+      logger.info('Successfully connect to NATS', {
+        module: 'natsClient',
+        method: 'connect',
+      });
     } catch (err) {
       logger.error(err.message, { module: 'natsClient', method: 'connect' });
       throw err;
@@ -73,7 +103,10 @@ class NATSClient {
       this.subs = {};
       this.handler = null;
 
-      logger.info('Successfully disconnect to NATS', { module: 'natsClient', method: 'disconnect' });
+      logger.info('Successfully disconnect to NATS', {
+        module: 'natsClient',
+        method: 'disconnect',
+      });
     } catch (err) {
       logger.error(err.message, { module: 'natsClient', method: 'disconnect' });
       throw err;
@@ -92,13 +125,16 @@ class NATSClient {
       const res = await this.jsm.streams.list().next();
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'listStreams' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'listStreams',
+      });
 
       return [];
     }
   }
 
-  async getStream(stream) {
+  async getStream(stream: any) {
     try {
       const res = await this.jsm.streams.info(stream);
       return res;
@@ -109,7 +145,7 @@ class NATSClient {
     }
   }
 
-  async addStream(stream, subjects) {
+  async addStream(stream: any, subjects: any) {
     try {
       const res = await this.jsm.streams.add({ name: stream, subjects });
       return res;
@@ -120,40 +156,49 @@ class NATSClient {
     }
   }
 
-  async deleteStream(stream) {
+  async deleteStream(stream: any) {
     try {
       const res = await this.jsm.streams.delete(stream);
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'deleteStream' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'deleteStream',
+      });
 
       return;
     }
   }
 
-  async listConsumers(stream) {
+  async listConsumers(stream: any) {
     try {
       const res = await this.jsm.consumers.list(stream).next();
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'listConsumers' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'listConsumers',
+      });
 
       return [];
     }
   }
 
-  async getConsumer(stream, consumer) {
+  async getConsumer(stream: any, consumer: any) {
     try {
       const res = await this.jsm.consumers.info(stream, consumer);
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'getConsumer' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'getConsumer',
+      });
 
       return null;
     }
   }
 
-  async addConsumer(stream, subject, consumer) {
+  async addConsumer(stream: any, subject: any, consumer: any) {
     try {
       const res = await this.jsm.consumers.add(stream, {
         durable_name: consumer,
@@ -162,24 +207,33 @@ class NATSClient {
       });
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'addConsumer' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'addConsumer',
+      });
       throw err;
     }
   }
 
-  async deleteConsumer(stream, consumer) {
+  async deleteConsumer(stream: any, consumer: any) {
     try {
       const res = await this.jsm.consumers.delete(stream, consumer);
       return res;
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'deleteConsumer' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'deleteConsumer',
+      });
       throw err;
     }
   }
 
-  async publish(subject, obj) {
+  async publish(subject: any, obj: any) {
     try {
-      const pa = await this.js.publish(subject, this.sc.encode(JSON.stringify(obj)));
+      const pa = await this.js.publish(
+        subject,
+        this.sc.encode(JSON.stringify(obj)),
+      );
       return pa;
     } catch (err) {
       logger.error(err.message, { module: 'natsClient', method: 'publish' });
@@ -187,7 +241,7 @@ class NATSClient {
     }
   }
 
-  async subscribe(stream, subject, consumerName, callback) {
+  async subscribe(stream: any, subject: any, consumerName: any, callback: any) {
     try {
       if (this.subs[subject]) {
         return;
@@ -223,7 +277,7 @@ class NATSClient {
     }
   }
 
-  async unsubscribe(subject) {
+  async unsubscribe(subject: any) {
     try {
       if (!this.subs[subject]) {
         return;
@@ -234,17 +288,12 @@ class NATSClient {
 
       delete this.subs[subject];
     } catch (err) {
-      logger.error(err.message, { module: 'natsClient', method: 'unsubscribe' });
+      logger.error(err.message, {
+        module: 'natsClient',
+        method: 'unsubscribe',
+      });
     }
   }
 }
 
-NATSClient._instance = null;
-NATSClient.instance = () => {
-  if (!NATSClient._instance) {
-    NATSClient._instance = new NATSClient();
-  }
-  return NATSClient._instance;
-};
-
-module.exports = NATSClient;
+export default NATSClient;
