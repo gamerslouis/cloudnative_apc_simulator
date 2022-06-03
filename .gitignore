@@ -102,3 +102,18 @@ dist
 
 # TernJS port file
 .tern-port
+
+# DB 
+mongodb/
+
+# jetstream
+jetstream-cluster/
+
+# Local testing github actions tool
+bin/
+
+# Testing Report 
+result.json
+
+# Secret File
+.secret
