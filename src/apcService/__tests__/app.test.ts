@@ -1,6 +1,6 @@
-import NodeCache from 'node-cache';
 import supertest from 'supertest';
 import app from '../app';
+import { NodeCacheAdapter } from '../utilities/cacheUtil';
 
 const tasks = [
   ['1', 'SHARON', 1.0, 2.0, '20.00', '1.00', 1, 7],
@@ -14,7 +14,7 @@ const tasks = [
 
 describe('apc service', () => {
   it('can work', async () => {
-    global.cache = new NodeCache();
+    global.cache = new NodeCacheAdapter();
     for (let task of tasks) {
       const [
         id,
@@ -27,8 +27,8 @@ describe('apc service', () => {
         mFactor,
       ] = task;
 
-      global.cache.set('FACTOR_THICKNESS', tFactor);
-      global.cache.set('FACTOR_MOISTURE', mFactor);
+      global.cache.set('FACTOR_THICKNESS', tFactor as number);
+      global.cache.set('FACTOR_MOISTURE', mFactor as number);
 
       const resp = await supertest(app).post('/api/v1/process').send({
         id,

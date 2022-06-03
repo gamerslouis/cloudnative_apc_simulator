@@ -5,9 +5,9 @@ import { nats } from 'config';
 import Logger from './utilities/logger';
 import NATSClient from './utilities/natsClient';
 import measureService from './measureService';
-import apcService from './apcService';
-import paramsService from './paramsService';
-import { Cache, NodeCacheAdapter } from './apcService/utilities/Cache/cache';
+import * as apcService from './apcService';
+import * as paramsService from './paramsService';
+import { Cache, MongoDBCacheAdapter } from './apcService/utilities/cacheUtil';
 
 declare global {
   var cache: Cache;
@@ -56,7 +56,7 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
-  global.cache = new NodeCacheAdapter();
+  global.cache = new MongoDBCacheAdapter();
   global.cache.set('FACTOR_THICKNESS', 0.5);
   global.cache.set('FACTOR_MOISTURE', 0.5);
 };
