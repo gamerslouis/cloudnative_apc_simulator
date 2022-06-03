@@ -4,7 +4,7 @@ module.exports = {
     paramsPeriod: 15000,
   },
   mongodb: {
-    uri: 'mongodb://localhost:27017/admin',
+    uri: 'mongodb://localhost:27017/test',
     collection : 'apc',
   },
   nats: {
