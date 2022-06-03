@@ -1,6 +1,5 @@
 import NodeCache, { Key } from 'node-cache';
 import sp from 'synchronized-promise';
-const { mongodb } = require('config');
 const cacheManager = require('cache-manager');
 const mongoStore = require('cache-manager-mongodb');
 
@@ -8,18 +7,6 @@ export interface Cache {
   get(key: String): number;
   set(key: String, value: number);
   close();
-}
-
-export class MongoCache implements Cache {
-  public get(key: String): number {
-    return;
-  }
-
-  public set(key: String, value: number): Boolean {
-    return;
-  }
-
-  public close() {}
 }
 
 export class NodeCacheAdapter implements Cache {
@@ -43,12 +30,12 @@ export class MongoDBCacheAdapter implements Cache {
   ttl: number = 60;
   mongoCache: any;
 
-  constructor() {
+  constructor(uri, collection) {
     this.mongoCache = cacheManager.caching({
       store: mongoStore,
-      uri: mongodb.uri,
+      uri: uri,
       options: {
-        collection: mongodb.collection,
+        collection: collection,
         compression: false,
         poolSize: 10,
         autoReconnect: true,

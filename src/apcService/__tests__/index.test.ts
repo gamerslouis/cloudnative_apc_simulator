@@ -4,7 +4,7 @@ let mockListen = jest.fn().mockImplementation((port, callback) => callback());
 
 jest.mock('../app', () => {
   return {
-    listen: mockListen,
+    listen: (port, cb) => mockListen(port, cb),
   };
 });
 
