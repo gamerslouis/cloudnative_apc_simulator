@@ -2,7 +2,7 @@ import { cron, domainService } from 'config';
 import axios from 'axios';
 import app from './app';
 
-const run = async () => {
+export const run = async () => {
   return new Promise((resolve, reject) => {
     try {
       app.listen(domainService.params.port, () => {
@@ -26,8 +26,4 @@ const run = async () => {
       reject(e);
     }
   });
-};
-
-export default {
-  run,
 };

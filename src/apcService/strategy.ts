@@ -13,7 +13,7 @@ export class DefaultStrategy implements Strategy {
   public applyTo(ctx: OrderContext): APCResult {
     let result: APCResult = {
       period: (ctx.order.moisture * ctx.mFactor).toFixed(2),
-      temperature: 100,
+      temperature: '100.00',
     };
     return result;
   }
@@ -22,7 +22,7 @@ export class DefaultStrategy implements Strategy {
 export class SharonStrategy implements Strategy {
   public applyTo(ctx: OrderContext): APCResult {
     let result: APCResult = {
-      period: 20,
+      period: '20.00',
       temperature: (ctx.order.thickness * ctx.tFactor).toFixed(2),
     };
     return result;
@@ -32,7 +32,7 @@ export class SharonStrategy implements Strategy {
 export class TboneStrategy implements Strategy {
   public applyTo(ctx: OrderContext): APCResult {
     let result: APCResult = {
-      period: 25,
+      period: '25.00',
       temperature: (ctx.order.thickness * ctx.tFactor).toFixed(2),
     };
     return result;

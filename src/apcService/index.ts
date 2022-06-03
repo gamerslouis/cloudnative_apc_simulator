@@ -1,19 +1,9 @@
 import { domainService, nats } from 'config';
-import express from 'express';
-import { json, urlencoded } from 'body-parser';
-import cors from 'cors';
-import processRouter from './routers/v1/process';
 import { natsMessageHandler } from './utilities/messageUtil';
 
-const app = express();
+import app from './app';
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(cors());
-
-app.use('', processRouter);
-
-const run = async () => {
+export const run = async () => {
   // subscribe the subject
   if (global.natsClient) {
     global.natsClient.subscribe(
@@ -29,8 +19,4 @@ const run = async () => {
       resolve(undefined);
     });
   });
-};
-
-export default {
-  run,
 };

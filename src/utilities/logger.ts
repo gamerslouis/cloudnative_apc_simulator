@@ -72,7 +72,7 @@ export default class Logger {
   info(arg0: string, arg1?: { module: string; method: string }) {
     this.logger.info(arg0, arg1);
   }
-  error(message: any, arg1: { module: string; method: string }) {
+  error(message: any, arg1?: { module: string; method: string }) {
     this.logger.error(message, arg1);
   }
 }
