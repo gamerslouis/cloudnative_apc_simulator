@@ -3,6 +3,10 @@ module.exports = {
     measurePeriod: 10000,
     paramsPeriod: 15000,
   },
+  mongodb: {
+    uri: 'mongodb://localhost:27017/test',
+    collection : 'apc',
+  },
   nats: {
     connection: '127.0.0.1:4222',
     name: 'testbed',
