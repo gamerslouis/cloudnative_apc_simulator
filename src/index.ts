@@ -57,8 +57,8 @@ const initGlobalNATSClient = async () => {
 
 const initGlobalCache = async () => {
   global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection);
-  global.cache.set('FACTOR_THICKNESS', 0.5);
-  global.cache.set('FACTOR_MOISTURE', 0.5);
+  await global.cache.set('FACTOR_THICKNESS', 0.5);
+  await global.cache.set('FACTOR_MOISTURE', 0.5);
 };
 
 const run = async () => {

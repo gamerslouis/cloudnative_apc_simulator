@@ -22,7 +22,7 @@ router.post('/api/v1/process', async (req: any, res: any) => {
     }
 
     const order = new Order(type, moisture, thickness);
-    const ctx = OrderContext.instatnce(order);
+    const ctx = await OrderContext.instatnce(order);
     const result = new StrategyFactory().applyTo(ctx);
     const data = {
       ...result,

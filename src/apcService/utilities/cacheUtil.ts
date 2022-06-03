@@ -4,8 +4,8 @@ const cacheManager = require('cache-manager');
 const mongoStore = require('cache-manager-mongodb');
 
 export interface Cache {
-  get(key: String): number;
-  set(key: String, value: number);
+  get(key: String): Promise<number>;
+  set(key: String, value: number): Promise<boolean>;
   close();
 }
 
@@ -15,10 +15,10 @@ export class NodeCacheAdapter implements Cache {
   constructor() {
     this.cache = new NodeCache();
   }
-  public get(key: String): number {
-    return this.cache.get(key as Key);
+  public async get(key: String) {
+    return this.cache.get(key as Key) as number;
   }
-  public set(key: String, value: number): Boolean {
+  public async set(key: String, value: number) {
     return this.cache.set(key as Key, value);
   }
   public close() {
@@ -43,12 +43,17 @@ export class MongoDBCacheAdapter implements Cache {
     });
   }
 
-  get(key: String): number {
-    return sp(this.mongoCache.get)(key) as number;
+  async get(key: String) {
+    return await this.mongoCache.get(key);
   }
 
-  set(key: String, value: number) {
-    sp(this.mongoCache.set)(key, value, this.ttl);
+  async set(key: String, value: number) {
+    try {
+      await this.mongoCache.set(key, value, this.ttl);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   close() {

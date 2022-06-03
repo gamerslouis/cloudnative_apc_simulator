@@ -27,8 +27,8 @@ describe('apc service', () => {
         mFactor,
       ] = task;
 
-      global.cache.set('FACTOR_THICKNESS', tFactor as number);
-      global.cache.set('FACTOR_MOISTURE', mFactor as number);
+      await global.cache.set('FACTOR_THICKNESS', tFactor as number);
+      await global.cache.set('FACTOR_MOISTURE', mFactor as number);
 
       const resp = await supertest(app).post('/api/v1/process').send({
         id,
