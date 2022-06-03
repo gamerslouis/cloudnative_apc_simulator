@@ -34,5 +34,15 @@
   "devDependencies": {
     "supertest": "^6.2.3",
     "jest": "^28.1.0"
+  },
+  "jest": {
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      "text",
+      "text-summary",
+      "json-summary"
+    ]
   }
 }
