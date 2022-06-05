@@ -57,11 +57,11 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
-  if (process.env.MONGO_USER && process.env.MONGO_PASSWORD_PATH) {
+  if (process.env.MONGO_USER && process.env.MONGO_PASSWORD) {
     global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection, {
       enableAuth: true,
       username: process.env.MONGO_USER,
-      password: readFileSync(process.env.MONGO_PASSWORD_PATH, 'utf8'),
+      password: process.env.MONGO_PASSWORD,
     });
   } else {
     global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection);
