@@ -49,7 +49,11 @@ export class AngusStrategy implements Strategy {
   }
 }
 
-export class StrategyFactory implements Strategy {
+export class StrategyFactory {
+  applyTo(ctx: OrderContext): APCResult {
+    return this.getStrategy(ctx).applyTo(ctx);
+  }
+
   getStrategy(ctx: OrderContext): Strategy {
     if (ctx.order.type == 'SHARON') {
       return new SharonStrategy();
@@ -60,9 +64,5 @@ export class StrategyFactory implements Strategy {
     } else {
       return new DefaultStrategy();
     }
-  }
-
-  applyTo(ctx: OrderContext): APCResult {
-    return this.getStrategy(ctx).applyTo(ctx);
   }
 }
