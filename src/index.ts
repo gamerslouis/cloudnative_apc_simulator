@@ -8,6 +8,7 @@ import measureService from './measureService';
 import * as apcService from './apcService';
 import * as paramsService from './paramsService';
 import { Cache, MongoDBCacheAdapter } from './apcService/utilities/cacheUtil';
+import { readFileSync } from 'fs';
 
 declare global {
   var cache: Cache;
@@ -56,7 +57,16 @@ const initGlobalNATSClient = async () => {
 };
 
 const initGlobalCache = async () => {
-  global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection);
+  if (process.env.MONGO_USER && process.env.MONGO_PASSWORD_PATH) {
+    global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection, {
+      enableAuth: true,
+      username: process.env.MONGO_USER,
+      password: readFileSync(process.env.MONGO_PASSWORD_PATH, 'utf8'),
+    });
+  } else {
+    global.cache = new MongoDBCacheAdapter(mongodb.uri, mongodb.collection);
+  }
+
   await global.cache.set('FACTOR_THICKNESS', 0.5);
   await global.cache.set('FACTOR_MOISTURE', 0.5);
 };

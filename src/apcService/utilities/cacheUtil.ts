@@ -30,10 +30,26 @@ export class MongoDBCacheAdapter implements Cache {
   ttl: number = 60;
   mongoCache: any;
 
-  constructor(uri, collection) {
+  constructor(
+    uri: string,
+    collection,
+    options: {
+      enableAuth?: boolean;
+      username?: string;
+      password?: string;
+    } = {},
+  ) {
+    let full_uri;
+    if (options?.enableAuth) {
+      full_uri = `mongodb://${options.username}:${
+        options.password
+      }@${uri.substring(10)}`;
+    } else {
+      full_uri = uri;
+    }
     this.mongoCache = cacheManager.caching({
       store: mongoStore,
-      uri: uri,
+      uri: full_uri,
       options: {
         collection: collection,
         compression: false,
